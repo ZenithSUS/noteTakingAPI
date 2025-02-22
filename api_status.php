@@ -26,6 +26,15 @@ class API extends Database {
             return json_encode($response);
         }
 
+        if($type == 'logout') {
+            $response = array (
+                'status' => 200,
+                'message' => 'logout success'
+            );
+            header("HTTP/1.1 200 Logout Success");
+            return json_encode($response);
+        }
+
         $response = array (
             'status' => 200,
             'message' => 'success'

@@ -12,7 +12,7 @@ class Auth extends Token {
      * @param string $password
      * @return string
      */
-    protected function loginUser(string $account, string $password) : string { 
+    protected function loginUser(?string $account = null, ?string $password = null) : string { 
         $sql = "SELECT * FROM users WHERE email = ? OR username = ? LIMIT 1";
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param('ss', $account, $account);
@@ -20,6 +20,7 @@ class Auth extends Token {
         if(!$stmt->execute()) {
             return $this->queryFailed();
         }
+
 
         $result = $stmt->get_result();
         
@@ -75,6 +76,16 @@ class Auth extends Token {
         }
 
         return $this->registerUserQuery($email, $username, $password);
+    }
+
+    /**
+     * Logout user
+     * @param string $token
+     * @return string
+     */
+    protected function logoutUser(?string $token) : string {
+        $this->deleteToken($token);
+        return $this->success('logout');
     }
 
     /**

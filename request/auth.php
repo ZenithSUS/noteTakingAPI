@@ -4,6 +4,7 @@ include_once('../queries/auth.php');
 
 $requestMethod = $_SERVER["REQUEST_METHOD"] ?? null;
 $process = isset($_POST['process']) ? $_POST['process'] : null;
+$routeOptions = array("login", "register", "logout");
 
 class AuthRequest extends Auth {
 
@@ -17,6 +18,14 @@ class AuthRequest extends Auth {
 
     public function register(string $email, string $username, string $password, string $confirmpassword) : string {
         return $this->registerUser($email, $username, $password, $confirmpassword);
+    }
+
+    public function logout(string $token) : string {
+        return $this->logoutUser($token);
+    }
+
+    public function bad() : string {
+        return $this->badRequest();
     }
 }
 
@@ -37,6 +46,19 @@ if($requestMethod == "POST") {
         $confirmpassword = $_POST['confirmpassword'] ?? null;
         echo $auth->register($email, $username, $password, $confirmpassword);
     }
+
+    if($process && $process == "logout") {
+        $token = $_POST['token'] ?? null;
+        echo $auth->logout($token);
+    }
+
+    if(!in_array($process, $routeOptions)) {
+        echo $auth->bad();
+    }
+}
+
+if($requestMethod == "GET") {
+    echo $auth->bad();
 }
 
 
