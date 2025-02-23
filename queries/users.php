@@ -16,7 +16,7 @@ class Users extends Token {
         $stmt = $this->conn->prepare($sql);
 
         if(!$stmt) {
-            $this->queryFailed();
+            return $this->queryFailed();
         }
         $stmt->execute();
         $result = $stmt->get_result();

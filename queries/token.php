@@ -20,7 +20,7 @@ class Token extends API {
      * @param string $token
      * @return bool
     */
-    protected function verifyToken(string $token) : bool {
+    protected function verifyToken(?string $token = null) : bool {
         $sql = "SELECT token FROM users WHERE token = ? LIMIT 1";
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param('s', $token);

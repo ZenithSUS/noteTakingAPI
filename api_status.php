@@ -16,29 +16,15 @@ class API extends Database {
      * @return string
      */
     protected function success(string $type = null, string $token = null) : string {
-        if($type == 'login') {
-            $response = array (
-                'status' => 200,
-                'message' => 'login success',
-                'token' => $token
-            );
-            header("HTTP/1.1 200 Login Success");
-            return json_encode($response);
-        }
-
-        if($type == 'logout') {
-            $response = array (
-                'status' => 200,
-                'message' => 'logout success'
-            );
-            header("HTTP/1.1 200 Logout Success");
-            return json_encode($response);
-        }
 
         $response = array (
             'status' => 200,
             'message' => 'success'
         );
+
+        if(isset($token)) $response['token'] = $token;
+        if(isset($type)) $response['type'] = $type. ' successful';
+
         header("HTTP/1.1 200 OK");
         return json_encode($response);
     }
@@ -64,21 +50,13 @@ class API extends Database {
     protected function fetched($result, ?string $type = null, ?int $totalPages = null) : string {
         !$type ? $result = $result->fetch_all(MYSQLI_ASSOC) : $result = $result->fetch_assoc();
         
-        if(!empty($totalPages)) {
-            $response = array (
-                'status' => 200,
-                'message' => 'Query successful',
-                'data' => $result,
-                'totalPages' => $totalPages
-            );
-            header("HTTP/1.1 200 OK");
-            return json_encode($response);
-        }
         $response = array (
             'status' => 200,
             'message' => 'Query successful',
             'data' => $result
         );
+        if(isset($totalPages)) $response['totalPages'] = $totalPages;
+        
         header("HTTP/1.1 200 OK");
         return json_encode($response);
     }

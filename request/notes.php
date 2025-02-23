@@ -1,26 +1,25 @@
 <?php
 include_once '../headers.php';
 include_once '../authorization_headers.php';
-include_once '../queries/users.php';
+include_once '../queries/notes.php';
 
 $requestMethod = $_SERVER["REQUEST_METHOD"] ?? null;
 $process = isset($_POST['process']) ? $_POST['process'] : null;
-$routeOptions = array("get-username");
+$routeOptions = array("get-notes", "add-note");
 
 $token = $headers['Authorization'] ?? null;
 if(isset($token) && strpos($token, 'Bearer ') !== false) {
-    $token = explode(' ', $token)[1];
+    $token = explode(' ', $token)[1];   
 }
 
+class NotesRequest extends Notes {
 
-class UsersRequest extends Users {
-    
     public function __construct() {
         parent::__construct();
     }
 
-    public function getUserAccount(string $token) : string {
-        return json_encode(["username" => $this->getUsername($token)]);
+    public function get() : string {
+        return $this->getNotes();
     }
 
     public function verifyUserToken(?string $token) : bool {
@@ -34,10 +33,10 @@ class UsersRequest extends Users {
     public function bad() : string {
         return $this->badRequest();
     }
-
 }
 
-$users = new UsersRequest();
+
+$notes = new NotesRequest();
 
 if($requestMethod == 'OPTIONS') {
     http_response_code(200);
@@ -47,21 +46,20 @@ if($requestMethod == 'OPTIONS') {
     exit();
 }
 
-if(!$users->verifyUserToken($token)) {
-    echo $users->unauthorizedData();
+if(!$notes->verifyUserToken($token)) {
+    echo $notes->unauthorizedData();
     exit();
 }
 
+
 if($requestMethod == 'POST') {
 
-    if($process && $process == 'get-username') {
-        echo $users->getUserAccount($token);
+    if($process && $process == 'get-notes') {
+        echo $notes->get();
     }
-
-}
+}   
 
 if(!in_array($process, $routeOptions)) {
-    echo $users->bad();
+    echo $notes->bad();
 }
-
 ?>
