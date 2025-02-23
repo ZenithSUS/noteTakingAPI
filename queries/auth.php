@@ -68,7 +68,7 @@ class Auth extends Token {
      * @param string $confirmpassword
      * @return string
      */
-    protected function registerUser(string $email, string $username, string $password, string $confirmpassword) : string {
+    protected function registerUser(?string $email = null, ?string $username = null, ?string $password = null, ?string $confirmpassword = null) : string {
         $this->checkFields($email, $username, $password, $confirmpassword);
 
         if(!empty($this->errors)) {
@@ -96,7 +96,7 @@ class Auth extends Token {
      * @param string $confirmpassword
      * @return void
     */
-    private function checkFields(string $email, string $username, string $password, string $confirmpassword) : void {
+    private function checkFields(?string $email = null, ?string $username = null, ?string $password = null, ?string $confirmpassword = null) : void {
         if(empty($email) || is_null($email)) {
             $this->errors['email'] = "Please fill the email";
         } else if ($this->checkEmail($email) == false) {

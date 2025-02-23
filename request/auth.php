@@ -16,7 +16,7 @@ class AuthRequest extends Auth {
         return $this->loginUser($account, $password);
     }
 
-    public function register(string $email, string $username, string $password, string $confirmpassword) : string {
+    public function register(?string $email = null, ?string $username = null, ?string $password = null, ?string $confirmpassword = null) : string {
         return $this->registerUser($email, $username, $password, $confirmpassword);
     }
 
