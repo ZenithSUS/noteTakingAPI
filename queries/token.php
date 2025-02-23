@@ -18,13 +18,12 @@ class Token extends API {
     /**
      * Verify token
      * @param string $token
-     * @param string $account
-     * @return void
+     * @return bool
     */
-    protected function verifyToken(string $token, string $account) : bool {
-        $sql = "SELECT token FROM users WHERE email = ? OR username = ? AND token = ? LIMIT 1";
+    protected function verifyToken(string $token) : bool {
+        $sql = "SELECT token FROM users WHERE token = ? LIMIT 1";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param('sss', $account, $account, $token);
+        $stmt->bind_param('s', $token);
         $stmt->execute();
         $result = $stmt->get_result();
         $stmt->close();
@@ -56,20 +55,6 @@ class Token extends API {
         $stmt->bind_param('s', $token);
         $stmt->execute();
         $stmt->close();
-    }
-
-    /**
-     * Check token
-     * @param string $token
-     * @return bool
-    */
-    public function checkToken(?string $token = null) : bool {
-        $sql = "SELECT token FROM users WHERE token = ? LIMIT 1";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param('s', $token);
-        $stmt->execute();
-        return $stmt->get_result()->num_rows > 0;
-    }
+    }    
 }
-
 ?>
